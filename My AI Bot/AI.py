@@ -7,9 +7,12 @@ from datetime import date
 import wikipedia
 import webbrowser
 import random
+import cv2
+import time
 import string
 import pyjokes
 import pyttsx3
+import smtplib
 import speech_recognition as sr # pip install SpeechRecognition
 engine = pyttsx3.init()
 def speak(text):
@@ -61,6 +64,37 @@ def wiki():
     wiki = takecommand()
     # wiki = input(speak("What should I search on wikipedia\n"))
     speak(wikipedia.summary(wiki))
+def email():
+    engine = pyttsx3.init()
+    def speak(text):
+        engine.say(text)
+        engine.runAndWait() 
+    speak ("Enter your Gmail ID")
+    x = input("Enter your Gmail ID\n")
+    speak ("Enter your mail")
+    y = takecommand()
+    # y = ("Enter your mail\n")
+    def sendEmail(to,content):
+        server = smtplib.SMTP('smtp.gmail.com',587)
+        server.starttls()
+        server.login('tauheedsiddiqui396@gmail.com','pkej kndm fxye rhvq')
+        # content = takecommand()
+        server.sendmail('tauheedsiddiqui396@gmail.com',to,content)
+        server.close()
+        print("email sent")
+    sendEmail(x,y) 
+def camera():
+    cam = cv2.VideoCapture(0)
+    while (True):
+        newtime = str(time.time())
+        ret,frame = cam.read()
+        cv2.imshow("webcam",frame)
+        if cv2.waitKey(1) == ord('c'):
+            cv2.imwrite(f"{newtime}.png",frame)
+        elif cv2.waitKey(1) == ord('q'):
+            break
+    cam.release()
+    cv2.destroyAllWindows()
 def cal():
     x = int(input(speak("Entwr Number 1:\n")))
     y = int(input(speak("Entwr Number 2:\n")))
@@ -85,6 +119,7 @@ def cal():
 def jokes():
     speak(pyjokes.get_joke())
 while True:
+    speak("Hello, I'm your vit,How may i help you")
     speak("Ask Question\n")
     x = takecommand().lower()
     # x = input(speak("Ask Question\n"))
@@ -108,6 +143,10 @@ while True:
        jokes()
     elif "offline" in x:
         exit()
+    elif "camera" in x:
+         camera()
+    elif "mail" in x:
+         email()
     # elif "stop" or "exit" in x:
     #     break 
     else: 
